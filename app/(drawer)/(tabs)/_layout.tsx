@@ -5,7 +5,7 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { setStatusBarHidden } from 'expo-status-bar';
+import { DrawerToggleButton } from '@react-navigation/drawer';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -14,7 +14,8 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
+        headerShown: true,
+        headerLeft: () => <DrawerToggleButton tintColor={colorScheme == 'dark'? 'white' : '#000'} />
       }}>
       <Tabs.Screen
         name="index"
