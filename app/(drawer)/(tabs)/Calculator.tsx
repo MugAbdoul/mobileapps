@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from '@/hooks/useColorScheme'; // Import useColorScheme
 
 const App: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [result, setResult] = useState<string>("");
   const [isResultShown, setIsResultShown] = useState<boolean>(false);
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme(); // Get color scheme
 
   const handleInput = (value: string): void => {
     if (isResultShown) {
       if (/\d/.test(value)) {
+        // If result is shown and a number is pressed, start fresh
         setInput(value);
         setResult("");
       } else {
+        // If result is shown and an operator is pressed, use the result
         setInput(result + value);
       }
       setIsResultShown(false);

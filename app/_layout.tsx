@@ -1,15 +1,18 @@
+// RootLayout.tsx
+import React, { useEffect } from 'react';
 import 'react-native-gesture-handler';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { Stack } from 'expo-router';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import * as SecureStore from 'expo-secure-store';
-import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
+import { ClerkProvider } from '@clerk/clerk-expo';
 import Toast from 'react-native-toast-message';
-
+import * as Notifications from 'expo-notifications';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import BatteryAlert from '@/components/BatteryAlert';
+import NetworkStatusManager from '@/components/NetworkStatusManager';
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -17,20 +20,20 @@ const tokenCache = {
   async getToken(key: string) {
     try {
       return SecureStore.getItemAsync(key);
-    }catch(error) {
+    } catch (error) {
+      console.error('Error getting token:', error);
       return null;
     }
   },
   async saveToken(key: string, value: string) {
     try {
       return SecureStore.setItemAsync(key, value);
-    }catch(error) {
-      return;
+    } catch (error) {
+      console.error('Error saving token:', error);
     }
   },
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 function RootLayout() {
@@ -48,14 +51,29 @@ function RootLayout() {
     }
   }, [loaded]);
 
+  useEffect(() => {
+    (async () => {
+      await Notifications.requestPermissionsAsync();
+    })();
+
+    const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+      console.log(notification);
+    });
+
+    return () => {
+      notificationListener.remove();
+    };
+  }, []);
+
   if (!loaded) {
     return null;
   }
 
-  return (<ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY!} tokenCache={tokenCache}> 
-    <RootLayoutNav />
-  </ClerkProvider>);
-  
+  return (
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY!} tokenCache={tokenCache}>
+      <RootLayoutNav />
+    </ClerkProvider>
+  );
 }
 
 const RootLayoutNav = () => {
@@ -63,13 +81,15 @@ const RootLayoutNav = () => {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <NetworkStatusManager />
+      <BatteryAlert />
       <Stack>
         <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <Toast/>
+      <Toast />
     </ThemeProvider>
   );
-}
+};
 
 export default RootLayout;

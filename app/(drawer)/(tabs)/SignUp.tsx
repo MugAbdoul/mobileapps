@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   seperator: {
-    fontFamily: 'mon-sb',
     fontSize: 16,
   },
   btnOutline: {
