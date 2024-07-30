@@ -68,6 +68,21 @@ const CustomDrawerContent = (props: React.JSX.IntrinsicAttributes & ScrollViewPr
           />
           <DrawerItem
             icon={({ color, size }) => (
+              <AntDesign
+                name="contacts"
+                size={size}
+                color={pathname === "/ContactList" ? "#fff" : textColor}
+              />
+            )}
+            label={"Contacts"}
+            labelStyle={[styles.navItemLabel, { color: pathname === "/ContactList" ? "#fff" : textColor }]}
+            style={{ backgroundColor }}
+            onPress={() => {
+              router.push("/ContactList");
+            }}
+          />
+          <DrawerItem
+            icon={({ color, size }) => (
               <Feather
                 name="log-out"
                 size={size}
@@ -83,21 +98,38 @@ const CustomDrawerContent = (props: React.JSX.IntrinsicAttributes & ScrollViewPr
           />
         </>
       ) : (
-        <DrawerItem
-          icon={({ color, size }) => (
-            <Ionicons
-              name="settings-outline"
-              size={size}
-              color={pathname === "/settings" ? "#fff" : textColor}
-            />
-          )}
-          label={"Settings"}
-          labelStyle={[styles.navItemLabel, { color: pathname === "/settings" ? "#fff" : textColor }]}
-          style={{ backgroundColor }}
-          onPress={() => {
-            router.push("/settings");
-          }}
-        />
+        <>
+          <DrawerItem
+            icon={({ color, size }) => (
+              <Ionicons
+                name="settings-outline"
+                size={size}
+                color={pathname === "/settings" ? "#fff" : textColor}
+              />
+            )}
+            label={"Settings"}
+            labelStyle={[styles.navItemLabel, { color: pathname === "/settings" ? "#fff" : textColor }]}
+            style={{ backgroundColor }}
+            onPress={() => {
+              router.push("/settings");
+            }}
+          />
+          <DrawerItem
+            icon={({ color, size }) => (
+              <AntDesign
+                name="contacts"
+                size={size}
+                color={pathname === "/ContactList" ? "#fff" : textColor}
+              />
+            )}
+            label={"Contacts"}
+            labelStyle={[styles.navItemLabel, { color: pathname === "/ContactList" ? "#fff" : textColor }]}
+            style={{ backgroundColor }}
+            onPress={() => {
+              router.push("/ContactList");
+            }}
+          />
+        </>
       )}
     </DrawerContentScrollView>
   );

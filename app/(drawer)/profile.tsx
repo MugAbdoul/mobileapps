@@ -5,6 +5,7 @@ import { useUser } from '@clerk/clerk-expo';
 import * as ImagePicker from 'expo-image-picker';
 import { defaultStyles } from '@/constants/Styles';
 import { useColorScheme } from '@/hooks/useColorScheme'; 
+import { useTheme } from '@/hooks/ThemeContext';
 
 
 export default function ProfilePage() {
@@ -17,8 +18,10 @@ export default function ProfilePage() {
 
   const colorScheme = useColorScheme();
 
+  const { theme, toggleTheme } = useTheme();
 
-  const isDarkMode = colorScheme === 'dark';
+
+  const isDarkMode = theme === 'dark';
   const themeStyles = isDarkMode ? darkStyles : lightStyles;
 
   useEffect(() => {

@@ -13,6 +13,9 @@ import * as Notifications from 'expo-notifications';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import BatteryAlert from '@/components/BatteryAlert';
 import NetworkStatusManager from '@/components/NetworkStatusManager';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '@/i18n';
+import { ThemeProvider as ThemeProviderTs } from '@/hooks/ThemeContext';
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -80,15 +83,19 @@ const RootLayoutNav = () => {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <NetworkStatusManager />
-      <BatteryAlert />
-      <Stack>
-        <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <Toast />
-    </ThemeProvider>
+    <ThemeProviderTs>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <NetworkStatusManager />
+        <BatteryAlert />
+        <I18nextProvider i18n={i18n}>
+          <Stack>
+            <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </I18nextProvider>
+        <Toast />
+      </ThemeProvider>
+    </ThemeProviderTs>
   );
 };
 

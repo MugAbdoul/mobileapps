@@ -1,0 +1,9 @@
+{
+    "contactList": {
+      "title": "Liste de Contacts",
+      "permissionDenied": "Permission Refusée",
+      "permissionMessage": "Vous devez accorder l'autorisation d'accès aux contacts pour utiliser cette fonctionnalité.",
+      "ok": "D'accord"
+    }
+  }
+  

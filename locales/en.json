@@ -1,0 +1,9 @@
+{
+    "contactList": {
+      "title": "Contact List",
+      "permissionDenied": "Permission Denied",
+      "permissionMessage": "You need to grant contacts permission to use this feature.",
+      "ok": "OK"
+    }
+  }
+  
