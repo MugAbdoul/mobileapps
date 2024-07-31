@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { useColorScheme } from '@/hooks/useColorScheme'; // Import useColorScheme
+import { useTheme } from '@/hooks/ThemeContext';
 
 const App: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [result, setResult] = useState<string>("");
   const [isResultShown, setIsResultShown] = useState<boolean>(false);
   const colorScheme = useColorScheme(); // Get color scheme
+  const { theme } = useTheme();
 
   const handleInput = (value: string): void => {
     if (isResultShown) {
@@ -66,10 +68,10 @@ const App: React.FC = () => {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+    <View style={[styles.container, { backgroundColor: theme === 'dark' ? '#000' : '#fff' }]}>
       <View style={styles.resultContainer}>
-        <Text style={[styles.inputText, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>{input}</Text>
-        <Text style={[styles.resultText, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>{result}</Text>
+        <Text style={[styles.inputText, { color: theme === 'dark' ? '#fff' : '#000' }]}>{input}</Text>
+        <Text style={[styles.resultText, { color: theme === 'dark' ? '#fff' : '#000' }]}>{result}</Text>
       </View>
       <View style={styles.buttonsContainer}>
         <View style={styles.row}>

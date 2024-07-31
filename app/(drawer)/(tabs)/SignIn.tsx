@@ -11,7 +11,8 @@ import { View, StyleSheet, TextInput, Text, TouchableOpacity } from 'react-nativ
 import { useWarmUpBrowser } from '@/hooks/useWarmUpBrowser';
 import { defaultStyles } from '@/constants/Styles';
 import React from 'react';
-import { useColorScheme } from '@/hooks/useColorScheme'; 
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useTheme } from '@/hooks/ThemeContext'; 
 
 enum Strategy {
   Google = 'oauth_google',
@@ -24,6 +25,7 @@ const Page: React.FC = () => {
 
   const router = useRouter();
   const { user } = useUser();
+  const { theme } = useTheme();
   
   const { startOAuthFlow: googleAuth } = useOAuth({ strategy: 'oauth_google' });
   const { startOAuthFlow: appleAuth } = useOAuth({ strategy: 'oauth_apple' });
@@ -88,7 +90,7 @@ const Page: React.FC = () => {
     }
   }, [isLoaded, emailAddress, password]);
 
-  const isDarkMode = colorScheme === 'dark';
+  const isDarkMode = theme === 'dark';
   const themeStyles = isDarkMode ? darkStyles : lightStyles;
 
   return (

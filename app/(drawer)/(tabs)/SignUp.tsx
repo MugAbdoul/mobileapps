@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import { useWarmUpBrowser } from "@/hooks/useWarmUpBrowser";
 import { defaultStyles } from '@/constants/Styles';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useTheme } from "@/hooks/ThemeContext";
 
 export default function SignUpScreen() {
   useWarmUpBrowser();
@@ -15,6 +16,7 @@ export default function SignUpScreen() {
   const { user } = useUser();
   const { signOut } = useAuth();
   const colorScheme = useColorScheme();
+  const { theme } = useTheme();
 
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -61,7 +63,7 @@ export default function SignUpScreen() {
     }
   };
 
-  const isDarkMode = colorScheme === 'dark';
+  const isDarkMode = theme === 'dark';
   const themeStyles = isDarkMode ? darkStyles : lightStyles;
 
   return (

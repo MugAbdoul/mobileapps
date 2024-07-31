@@ -4,9 +4,9 @@ import { router } from 'expo-router';
 import { useUser } from '@clerk/clerk-expo';
 import * as ImagePicker from 'expo-image-picker';
 import { defaultStyles } from '@/constants/Styles';
-import { useColorScheme } from '@/hooks/useColorScheme'; 
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { useTheme } from '@/hooks/ThemeContext';
-
+import { ActionSheetIOS, Platform } from 'react-native';
 
 export default function ProfilePage() {
   const { user } = useUser();
@@ -17,10 +17,7 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
 
   const colorScheme = useColorScheme();
-
-  const { theme, toggleTheme } = useTheme();
-
-
+  const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
   const themeStyles = isDarkMode ? darkStyles : lightStyles;
 
@@ -51,6 +48,35 @@ export default function ProfilePage() {
       return;
     }
 
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ['Cancel', 'Choose from Gallery', 'Take Photo'],
+          cancelButtonIndex: 0,
+        },
+        async (buttonIndex) => {
+          if (buttonIndex === 1) {
+            pickImageFromGallery();
+          } else if (buttonIndex === 2) {
+            takePhoto();
+          }
+        }
+      );
+    } else {
+      Alert.alert(
+        'Choose an option',
+        '',
+        [
+          { text: 'Choose from Gallery', onPress: pickImageFromGallery },
+          { text: 'Take Photo', onPress: takePhoto },
+          { text: 'Cancel', style: 'cancel' },
+        ],
+        { cancelable: true }
+      );
+    }
+  };
+
+  const pickImageFromGallery = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -59,13 +85,44 @@ export default function ProfilePage() {
         quality: 0.1,
         base64: true,
       });
-  
+
       if (!result.canceled && result.assets[0].base64) {
         const base64 = result.assets[0].base64;
         const mimeType = result.assets[0].mimeType;
-  
+
         const image = `data:${mimeType};base64,${base64}`;
-  
+
+        await user?.setProfileImage({
+          file: image,
+        });
+        setImageUri(result.assets[0].uri);
+      }
+    } catch (err: any) {
+      alert(err.errors[0].message);
+    }
+  };
+
+  const takePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission needed', 'Permission to access camera is needed!');
+      return;
+    }
+
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 4],
+        quality: 0.1,
+        base64: true,
+      });
+
+      if (!result.canceled && result.assets[0].base64) {
+        const base64 = result.assets[0].base64;
+        const mimeType = result.assets[0].mimeType;
+
+        const image = `data:${mimeType};base64,${base64}`;
+
         await user?.setProfileImage({
           file: image,
         });

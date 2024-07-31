@@ -17,15 +17,9 @@ const themes = {
   },
 };
 
-const Container = styled.View<{ theme: any }>`
-  flex: 1;
-  background-color: ${({ theme }:any) => theme === 'dark' ? 'white' : '#fff'};
-  padding: 16px;
-`;
 
 const SettingsScreen: React.FC = () => {
   const { t } = useTranslation();
-  const systemColorScheme = useColorScheme();
   const [language, setLanguage] = useState(i18n.language);
   const { theme, toggleTheme } = useTheme();
   
@@ -47,19 +41,25 @@ const SettingsScreen: React.FC = () => {
     await AsyncStorage.setItem('language', lang);
   };
 
+  const [getTheme, setTheme] = useState(theme === 'dark' ? themes['dark'] : themes['light']) as any;
+
+  useEffect(()=>{
+    setTheme(theme === 'dark' ? themes['dark'] : themes['light']);
+  }, [theme])
+
   return (
-      <Container>
-        <Text style={{ color: themes[theme].text }}>{t('settings.language')}</Text>
+      <View style={{flex: 1, backgroundColor: getTheme.background, paddingVertical: 50, paddingHorizontal: 30}}>
+        <Text style={{ color: getTheme.text, marginTop: 0, marginBottom: 20, fontSize: 25, fontWeight: 'bold' }}>{t('settings.language')}</Text>
         <Button title="English" onPress={() => changeLanguage('en')} />
         <Button title="Français" onPress={() => changeLanguage('fr')} />
         <View style={styles.switchContainer}>
-          <Text style={{ color: themes[theme].text }}>{t('settings.darkMode')}</Text>
+          <Text style={{ color: getTheme.text }}>{t('settings.darkMode')}</Text>
           <Switch
             value={theme === 'dark'}
             onValueChange={toggleTheme}
           />
         </View>
-      </Container>
+      </View>
   );
 };
 

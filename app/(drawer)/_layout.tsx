@@ -6,19 +6,25 @@ import { Feather, AntDesign, Ionicons } from "@expo/vector-icons";
 import { router, usePathname } from "expo-router";
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useAuth, useUser } from '@clerk/clerk-expo';
+import i18n from '@/i18n';
+import { useTranslation } from "react-i18next";
+import { useTheme } from '@/hooks/ThemeContext';
 
 const CustomDrawerContent = (props: React.JSX.IntrinsicAttributes & ScrollViewProps & { children: React.ReactNode; } & React.RefAttributes<ScrollView>) => {
   const { isSignedIn, signOut } = useAuth();
   const { user } = useUser();
   const pathname = usePathname();
   const colorScheme = useColorScheme();
+  const { theme } = useTheme();
 
-  const isDarkMode = colorScheme === 'dark';
+  const isDarkMode = theme === 'dark';
   const backgroundColor = isDarkMode ? "#333" : "#fff";
   const textColor = isDarkMode ? "#fff" : "#000";
 
+  const { t } = useTranslation();
+
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView {...props} style={{backgroundColor: backgroundColor}}>
       {isSignedIn ? (
         <View style={styles.userInfoWrapper}>
           <Image
@@ -44,7 +50,7 @@ const CustomDrawerContent = (props: React.JSX.IntrinsicAttributes & ScrollViewPr
                 color={pathname === "/profile" ? "#fff" : textColor}
               />
             )}
-            label={"Profile"}
+            label={t('menus.profile')}
             labelStyle={[styles.navItemLabel, { color: pathname === "/profile" ? "#fff" : textColor }]}
             style={{ backgroundColor }}
             onPress={() => {
@@ -59,7 +65,7 @@ const CustomDrawerContent = (props: React.JSX.IntrinsicAttributes & ScrollViewPr
                 color={pathname === "/settings" ? "#fff" : textColor}
               />
             )}
-            label={"Settings"}
+            label={t('settings.language')}
             labelStyle={[styles.navItemLabel, { color: pathname === "/settings" ? "#fff" : textColor }]}
             style={{ backgroundColor }}
             onPress={() => {
@@ -74,7 +80,7 @@ const CustomDrawerContent = (props: React.JSX.IntrinsicAttributes & ScrollViewPr
                 color={pathname === "/ContactList" ? "#fff" : textColor}
               />
             )}
-            label={"Contacts"}
+            label={t('contactList.title')}
             labelStyle={[styles.navItemLabel, { color: pathname === "/ContactList" ? "#fff" : textColor }]}
             style={{ backgroundColor }}
             onPress={() => {
@@ -89,7 +95,7 @@ const CustomDrawerContent = (props: React.JSX.IntrinsicAttributes & ScrollViewPr
                 color={pathname === "/logout" ? "#fff" : textColor}
               />
             )}
-            label={"Logout"}
+            label={t('menus.logout')}
             labelStyle={[styles.navItemLabel, { color: pathname === "/logout" ? "#fff" : textColor }]}
             style={{ backgroundColor }}
             onPress={() => {
@@ -107,7 +113,7 @@ const CustomDrawerContent = (props: React.JSX.IntrinsicAttributes & ScrollViewPr
                 color={pathname === "/settings" ? "#fff" : textColor}
               />
             )}
-            label={"Settings"}
+            label={t('settings.language')}
             labelStyle={[styles.navItemLabel, { color: pathname === "/settings" ? "#fff" : textColor }]}
             style={{ backgroundColor }}
             onPress={() => {
@@ -122,7 +128,7 @@ const CustomDrawerContent = (props: React.JSX.IntrinsicAttributes & ScrollViewPr
                 color={pathname === "/ContactList" ? "#fff" : textColor}
               />
             )}
-            label={"Contacts"}
+            label={t('contactList.title')}
             labelStyle={[styles.navItemLabel, { color: pathname === "/ContactList" ? "#fff" : textColor }]}
             style={{ backgroundColor }}
             onPress={() => {

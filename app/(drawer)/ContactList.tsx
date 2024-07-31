@@ -3,6 +3,7 @@ import { View, Text, Alert, FlatList, useColorScheme } from 'react-native';
 import * as Contacts from 'expo-contacts';
 import styled from 'styled-components/native';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@/hooks/ThemeContext';
 
 // Define a type for the theme prop
 interface ThemeProps {
@@ -15,10 +16,10 @@ const Container = styled.View<ThemeProps>`
   padding: 16px;
 `;
 const Title = styled.Text<ThemeProps>`
-    font-size: 35px;
+    font-size: 30px;
     color: ${({ theme }:any) => (theme === 'dark' ? '#000' : '#fff')};
     margin-bottom: 20px;
-    margin-top: 10px;
+    margin-top: 30px;
 
 `;
 
@@ -39,6 +40,7 @@ const ContactList: React.FC = () => {
   const [permissionStatus, setPermissionStatus] = useState<Contacts.PermissionStatus | null>(null);
   const colorScheme = useColorScheme(); // Detects if the system is in light or dark mode
   const { t } = useTranslation();
+  const {theme} = useTheme();
 
   useEffect(() => {
     checkPermission();
@@ -74,14 +76,14 @@ const ContactList: React.FC = () => {
   };
 
   return (
-    <Container theme={colorScheme as 'light' | 'dark'}>
-        <Title>{t('contactList.title')}</Title>
+    <Container theme={theme as 'light' | 'dark'}>
+        <Title style={{color: theme === 'dark' ? 'white' : 'black'}}>{t('contactList.title')}</Title>
       <FlatList
         data={contacts}
         keyExtractor={(item: any) => item.id}
         renderItem={({ item }) => (
-          <ContactItem theme={colorScheme as 'light' | 'dark'}>
-            <ContactName theme={colorScheme as 'light' | 'dark'}>{item.name}</ContactName>
+          <ContactItem theme={theme as 'light' | 'dark'}>
+            <ContactName theme={theme as 'light' | 'dark'}>{item.name}</ContactName>
           </ContactItem>
         )}
       />
